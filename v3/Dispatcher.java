@@ -53,10 +53,10 @@ public class Dispatcher implements Runnable {
 
 			// create an iterator for the set
 			Iterator<SelectionKey> iterator = readyKeys.iterator();
-
+			Debug.DEBUG("a");
 			// iterate over all events
-			while (iterator.hasNext()) {
-
+//			while (iterator.hasNext()) {
+			while (true) {
 				SelectionKey key = (SelectionKey) iterator.next();
 				iterator.remove();
 
@@ -66,26 +66,19 @@ public class Dispatcher implements Runnable {
 						IAcceptHandler aH = (IAcceptHandler) key.attachment();
 						aH.handleAccept(key);
 					} // end of isAcceptable
-					long timeSrcFlag = System.currentTimeMillis();
-					long timeDstFlag = System.currentTimeMillis();
-					boolean RWE = true;
-					while (RWE) {
-						if (timeDstFlag - timeSrcFlag >= 5) {
-							if (key.isReadable() || key.isWritable()) {
-								IReadWriteHandler rwH = (IReadWriteHandler) key.attachment();
 
-								if (key.isReadable()) {
-									rwH.handleRead(key);
-								} // end of if isReadable
+					if (key.isReadable() || key.isWritable()) {
+						IReadWriteHandler rwH = (IReadWriteHandler) key.attachment();
 
-								if (key.isWritable()) {
-									rwH.handleWrite(key);
-								} // end of if isWritable
-							} // end of readwrite
-							RWE = false;
-						}
-						timeDstFlag = System.currentTimeMillis();
-					}
+						if (key.isWritable()) {
+							rwH.handleWrite(key);
+						} // end of if isWritable
+
+						if (key.isReadable()) {
+							rwH.handleRead(key);
+						} // end of if isReadable
+
+					} // end of readwrite
 				} catch (IOException ex) {
 					Debug.DEBUG("Exception when handling key " + key);
 					key.cancel();
@@ -95,9 +88,6 @@ public class Dispatcher implements Runnable {
 					} catch (IOException cex) {
 					}
 				} // end of catch
-				catch (Exception e) {
-					throw new RuntimeException(e);
-				}
 
 			} // end of while (iterator.hasNext()) {
 

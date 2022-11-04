@@ -61,9 +61,9 @@ class WebRequestHandler {
 				
 	    String requestMessageLine = new String(inFromClient.array());
 	    DEBUG("Request " + reqCount + ": " + requestMessageLine);
-		String sentenceFromClient, userAgent;
-		String[] userAgentArray;
-//		while ((sentenceFromClient = inFromClient.readLine()) != null) {
+		String userAgent;
+		String[] userAgentArray, sentenceFromClient;
+//		while ((sentenceFromClient = requestMessageLine.readLine()) != null) {
 ////			DEBUG(sentenceFromClient);
 //			if(sentenceFromClient.charAt(0) == 'U') {
 //				userAgentArray = sentenceFromClient.split("\\s");
